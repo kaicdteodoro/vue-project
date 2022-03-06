@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="./vue.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        hr {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        #div-post {
+            margin-bottom: 5px;
+        }
+
+        #div-post input,
+        label {
+            margin: 10px;
+        }
+
+        .b {
+            border: 1px solid;
+        }
+
+        .div-main {
+            width: 200px;
+            height: 200px;
+        }
+
+        .div-default {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" style="width: fit-content; height: fit-content;">
+        <ul class="b">
+            <li v-for="(c, key) in comments" style="margin: 10px;">
+                {{c.comment}}
+                <button @click="updateComment(key)" style="display: inline-block;">Update</button>
+                <button @click="removeComment(key)" style="display: inline-block;">Remove</button>
+            </li>
+        </ul>
+        <button @click="pushComent()">Add</button>
+        <button @click="popComent()">Remove</button>
+        <hr>
+        <ul class="b">
+            <li v-for="lenguage in lenguageList" v-text="lenguage"></li>
+        </ul>
+        <hr>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="({titleIndex, description}, key) in descriptionLenguage">
+                    <td v-text="key"></td>
+                    <td v-text="lenguageList[titleIndex]"></td>
+                    <td v-text="description"></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <div id="div-post" v-for="p in posts" v-bind:key="p.id" class="b">
+            <label for="" v-text="p.post"></label>
+            <br>
+            <input type="text" :placeholder="p.post" v-once>
+        </div>
+        <br>
+        <button @click="arrayPostsMix()">Reorder posts</button>
+    </div>
+    <script>
+        let options = {
+            el: "#app",
+            data: {
+                comments: [
+                    {id:1, comment: 'Comment 1'},
+                    {id:2, comment: 'Comment 2'},
+                    {id:3, comment: 'Comment 3'}
+                ],
+                lenguageList: ['Laravel', 'VueJs', 'GoLang'],
+                posts: [
+                    { id: 1, post: "Post 1" },
+                    { id: 2, post: "Post 2" },
+                    { id: 3, post: "Post 3" },
+                    { id: 4, post: "Post 4" }
+                ],
+                descriptionLenguage: {
+                    123: { titleIndex: 0, description: 'This is a php back-end framework.' },
+                    124: { titleIndex: 1, description: 'This is a javascript front-end framework.' },
+                    125: { titleIndex: 2, description: 'This is a back-end lenguage.' }
+                }
+            },
+            methods: {
+                arrayPostsMix() {
+                    let mixedArray = [];
+                    mixedArray[0] = this.posts[3]
+                    mixedArray[1] = this.posts[0]
+                    mixedArray[2] = this.posts[1]
+                    mixedArray[3] = this.posts[2]
+                    this.posts = mixedArray;
+                },
+                updateComment(index) {
+                    let oldComment = this.comments[index]
+                    this.$set(this.comments, index, {id: oldComment.id, comment: oldComment.comment + ' was updated!'})
+                },
+                removeComment(index) {
+                    this.$delete(this.comments, index)
+                },
+                pushComent() {
+                    this.comments.push({id:Math.random(), comment:'Its a new comment!'})
+                },
+                popComent() {
+                    this.comments.pop()
+                }
+            }
+        };
+        const vm = new Vue(options);
+    </script>
+</body>
+
+</html>
